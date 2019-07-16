@@ -26,7 +26,6 @@ public class ApiClient {
         return retrofit;
     }
 
-
     public interface onWeatherUpdateListener  {
         void onWeatherUpdated(SimpleWeather weather);
     }
