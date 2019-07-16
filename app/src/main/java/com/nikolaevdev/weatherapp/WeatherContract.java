@@ -49,6 +49,8 @@ public class WeatherContract {
         void onDestroy();
 
         void showCurrentWeather( );
+        void onLocationChanged(double lat, double lon );
+        void getDataforDefaultLocation( );
 
 
     }

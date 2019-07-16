@@ -21,7 +21,7 @@ import com.nikolaevdev.weatherapp.model.pojo.SimpleWeather;
 import com.nikolaevdev.weatherapp.network.ApiClient;
 
 
-public class WeatherPresenter implements WeatherContract.WeatherPresenter, LocationListener {
+public class WeatherPresenter implements WeatherContract.WeatherPresenter {
 
     private final String TAG = getClass().getSimpleName();
 
@@ -40,27 +40,7 @@ public class WeatherPresenter implements WeatherContract.WeatherPresenter, Locat
 
     }
 
-    public void getUserLocation() {
-        try {
-            locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-        }
-        catch(SecurityException e) {
-            e.printStackTrace();
-        }
-    }
 
-    public void getDataForDefaultLocation(){
-
-        weatherModel.sendWeatherRequest(Constants.DEFAULT_LATTITUDE,
-                Constants.DEFAULT_LONGITUDE,context, new ApiClient.onWeatherUpdateListener() {
-                    @Override
-                    public void onWeatherUpdated(SimpleWeather weather) {
-                        view.showWeather(weather);
-                        Toast.makeText(context, context.getString(R.string.no_gps_permission_granted), Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
 
 
     @Override
@@ -74,38 +54,28 @@ public class WeatherPresenter implements WeatherContract.WeatherPresenter, Locat
        view.showWeather(weatherModel.getSavedWeather(context));
     }
 
-
     @Override
-    public void onLocationChanged(Location location) {
-
-        if (location != null){
-            weatherModel.sendWeatherRequest(location.getLatitude(), location.getLongitude(),context, new ApiClient.onWeatherUpdateListener() {
-                @Override
-                public void onWeatherUpdated(SimpleWeather weather) {
-                    view.showWeather(weather);
-                    Log.deb(TAG, "new weather received " + weather.getDescription() );
-                }
-            });
-        }
-
-
+    public void onLocationChanged(double lat, double lon) {
+        weatherModel.sendWeatherRequest(lat, lon,context, new ApiClient.onWeatherUpdateListener() {
+            @Override
+            public void onWeatherUpdated(SimpleWeather weather) {
+                view.showWeather(weather);
+                Log.deb(TAG, "new weather received " + weather.getDescription() );
+            }
+        });
     }
 
     @Override
-    public void onStatusChanged(String s, int i, Bundle bundle) {
-
+    public void getDataforDefaultLocation() {
+        weatherModel.sendWeatherRequest(Constants.DEFAULT_LATTITUDE,
+                Constants.DEFAULT_LONGITUDE,context, new ApiClient.onWeatherUpdateListener() {
+                    @Override
+                    public void onWeatherUpdated(SimpleWeather weather) {
+                        view.showWeather(weather);
+                        Toast.makeText(context, context.getString(R.string.no_gps_permission_granted), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
-    @Override
-    public void onProviderEnabled(String s) {
 
-        Log.err("",s);
-    }
-
-    @Override
-    public void onProviderDisabled(String s) {
-
-        Log.err("",s);
-
-    }
 }

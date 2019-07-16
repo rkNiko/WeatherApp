@@ -6,6 +6,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,6 +23,7 @@ import com.nikolaevdev.weatherapp.R;
 import com.nikolaevdev.weatherapp.WeatherContract;
 import com.nikolaevdev.weatherapp.databinding.FragmentCurrentWeatherBinding;
 import com.nikolaevdev.weatherapp.helper.Constants;
+import com.nikolaevdev.weatherapp.helper.Log;
 import com.nikolaevdev.weatherapp.helper.Utils;
 import com.nikolaevdev.weatherapp.model.pojo.SimpleWeather;
 import com.nikolaevdev.weatherapp.network.ApiClient;
@@ -29,17 +32,19 @@ import com.nikolaevdev.weatherapp.presenter.WeatherPresenter;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CurrentWeatherFragment extends Fragment implements WeatherContract.WeatherView {
+public class CurrentWeatherFragment extends Fragment implements WeatherContract.WeatherView, LocationListener {
 
     private FragmentCurrentWeatherBinding binding;
-    private WeatherPresenter weatherPresenter;
+    private WeatherContract.WeatherPresenter weatherPresenter;
     private final int GPS_PERMISSION_CODE = 0;
     private ProgressBar progressBar;
+    private LocationManager locationManager;
 
 
     public CurrentWeatherFragment() {
         // Required empty public constructor
     }
+
 
 
     @Override
@@ -57,7 +62,7 @@ public class CurrentWeatherFragment extends Fragment implements WeatherContract.
         weatherPresenter.showCurrentWeather();
 
         if (Utils.permissionGranted()){
-            weatherPresenter.getUserLocation();
+            getUserLocation();
         }else {
 
             showProgress();
@@ -67,6 +72,18 @@ public class CurrentWeatherFragment extends Fragment implements WeatherContract.
 
 
         return view;
+    }
+
+    public void getUserLocation() {
+        try {
+            locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10 * 60, 1000, this);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10 * 60, 1000, this);
+
+        }
+        catch(SecurityException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -93,7 +110,7 @@ public class CurrentWeatherFragment extends Fragment implements WeatherContract.
 
     private void grantPermission(){
         requestPermissions(
-                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
                 GPS_PERMISSION_CODE);
 
     }
@@ -107,14 +124,40 @@ public class CurrentWeatherFragment extends Fragment implements WeatherContract.
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    weatherPresenter.getUserLocation();
+                   getUserLocation();
                 } else {
-                    weatherPresenter.getDataForDefaultLocation();
+                  weatherPresenter.getDataforDefaultLocation();
                 }
                 return;
             }
 
         }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+        weatherPresenter.onLocationChanged(location.getLatitude(), location.getLongitude());
+
+
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+
+        Log.err("",s);
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+
+        Log.err("",s);
+
     }
 
 }
