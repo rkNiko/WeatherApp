@@ -9,7 +9,7 @@ public class ApiClient {
 
     public static final String BASE_URL = "http://api.openweathermap.org/";
     private static Retrofit retrofit ;
-    
+
     /**
      * This method returns retrofit client instance
      *
