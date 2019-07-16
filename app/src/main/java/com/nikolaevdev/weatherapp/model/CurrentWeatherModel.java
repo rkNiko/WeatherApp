@@ -85,7 +85,7 @@ public class CurrentWeatherModel implements WeatherContract.CurrentWeatherModel 
 
     private void showDialog(final double lat, final double lon, final Context context,
                             final ApiClient.onWeatherUpdateListener listener){
-        
+
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(R.string.dialog_text);
         builder.setCancelable(false);
@@ -99,8 +99,7 @@ public class CurrentWeatherModel implements WeatherContract.CurrentWeatherModel 
 
                     }
                 });
-
-
+        
         AlertDialog alert = builder.create();
         alert.show();
 
