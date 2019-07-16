@@ -102,7 +102,6 @@ public class CurrentWeatherModel implements WeatherContract.CurrentWeatherModel 
 
         AlertDialog alert = builder.create();
         alert.show();
-
     }
 
     @Override
