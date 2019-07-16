@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Weather App</string>
+    <string name="current_weather_menu">Current Weather</string>
+    <string name="weather_history_menu">Weather History</string>
+    <string name="settings_menu">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="sun_rise">Sun Rise:</string>
+    <string name="sun_set">Sun Set:</string>
+    <string name="pressure">Pressure:</string>
+    <string name="wind_sppeed">Wind Sppeed:</string>
+    <string name="humidity">Humidity:</string>
+    <string name="textview_default">TextView</string>
+    <string name="mps"> meter/sec</string>
+    <string name="pressure_metric"> hPa</string>
+    <string name="second"> second</string>
+    <string name="show_temperature_in">Show temperature in:</string>
+    <string name="farengheit"> F</string>
+    <string name="celsius"> ℃</string>
+    <string name="no_connection_toast">No connection is available. In order to receive latest weather conditions please connect</string>
+    <string name="dialog_text">No data is available. Please connect your phone to internet in order to receive weather information for your city</string>
+    <string name="dialog_positive_btn">Yes</string>
+    <string name="no_gps_permission_granted">Your default city location is set to Mykolaiv. To change it please allow app to use GPS</string>
+
+</resources>
